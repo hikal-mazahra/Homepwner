@@ -71,11 +71,8 @@ public class ItemFragment extends androidx.fragment.app.Fragment
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                try {
-                    mItem.setSerial(Integer.parseInt(s.toString()));
-                }catch(NumberFormatException e){
-                    mItem.setSerial(0);
-                }
+                    mItem.generateSerial();
+
             }
 
             @Override

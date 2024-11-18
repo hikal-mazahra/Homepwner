@@ -1,11 +1,12 @@
 package android.bignerdranch.majorprojectassignment1;
 
 import java.util.Date;
+import java.util.Random;
 
 public class Item
 {
     private String name;
-    private int Serial;
+    private String Serial;
     private double Value;
     private Date mDate;
 
@@ -31,14 +32,19 @@ public class Item
         this.mDate = mDate;
     }
 
-    public int getSerial() {
+    public String getSerial() {
         return Serial;
     }
 
-    public void setSerial(int serial) {
-        Serial = serial;
+    public String generateSerial() {
+        final String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(8);
+        for (int i = 0; i < 8; i++) {
+            sb.append(characters.charAt(random.nextInt(characters.length())));
+        }
+        return sb.toString();
     }
-
     public String getName() {
         return name;
     }
