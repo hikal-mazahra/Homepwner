@@ -1,5 +1,6 @@
 package android.bignerdranch.majorprojectassignment1;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class ItemListFragment extends Fragment {
@@ -27,12 +29,22 @@ public class ItemListFragment extends Fragment {
         updateUI();
         return view;
     }
+    @Override
+    public void onResume(){
+        super.onResume();
+        updateUI();
+    }
+
     public void updateUI(){
         ItemLab itemLab = ItemLab.get(getActivity());
         List<Item> items = itemLab.getmItems();
-        mAdapter = new ItemAdapter(items);
-        mItemRecyclerView.setAdapter(mAdapter);
-    }
+        if(mAdapter == null) {
+            mAdapter = new ItemAdapter(items);
+            mItemRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.notifyDataSetChanged();
+        }
+        }
     private class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView mNameTextView;
         private TextView mValueTextView;
@@ -48,12 +60,12 @@ public class ItemListFragment extends Fragment {
             mItem = item;
             mNameTextView.setText(mItem.getName());
             double value = mItem.getValue();
-            mValueTextView.setText(String.format("%.2f", value));
-        }
+            DecimalFormat df = new DecimalFormat("$0");
+            mValueTextView.setText(df.format(value));        }
         @Override
         public void onClick(View view){
-            Toast.makeText(getActivity(), mItem.getName() + " clicked!", Toast.LENGTH_SHORT)
-                    .show();
+                Intent intent = ItemPagerActivity.newIntent(getActivity(), mItem.getId());
+                startActivity(intent);
         }
     }
     private class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {

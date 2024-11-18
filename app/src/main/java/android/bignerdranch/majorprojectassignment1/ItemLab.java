@@ -1,10 +1,12 @@
 package android.bignerdranch.majorprojectassignment1;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class ItemLab {
     private static ItemLab sItemLab;
@@ -22,21 +24,22 @@ public class ItemLab {
         Item Rusty = new Item();
         Rusty.setValue(94);
         Rusty.setName("Rusty Bear");
-        Rusty.generateSerial();
+        Rusty.setSerial(Rusty.generateSerial());
         Rusty.setmDate(date);
         mItems.add(Rusty);
+
 
         Item Fluffy = new Item();
         Fluffy.setValue(59);
         Fluffy.setName("Fluffy Bear");
-        Fluffy.generateSerial();
+        Fluffy.setSerial(Fluffy.generateSerial());
         Fluffy.setmDate(date);
         mItems.add(Fluffy);
 
         Item Spork = new Item();
         Spork.setValue(66);
         Spork.setName("Fluffy Spork");
-        Spork.generateSerial();
+        Spork.setSerial(Spork.generateSerial());
         Spork.setmDate(date);
         mItems.add(Spork);
 
@@ -44,7 +47,7 @@ public class ItemLab {
         Item Mac = new Item();
         Mac.setValue(72);
         Mac.setName("Shiny Mac");
-        Mac.generateSerial();
+        Mac.setSerial(Mac.generateSerial());
         Mac.setmDate(date);
         mItems.add(Mac);
 
@@ -52,7 +55,7 @@ public class ItemLab {
         Item Fluffy2 = new Item();
         Fluffy2.setValue(40);
         Fluffy2.setName("Fluffy Bear");
-        Fluffy2.generateSerial();
+        Fluffy2.setSerial(Fluffy2.generateSerial());
         Fluffy2.setmDate(date);
         mItems.add(Fluffy2);
     }
@@ -61,9 +64,9 @@ public class ItemLab {
         return mItems;
     }
 
-    public Item getItem(String id) {
+    public Item getItem(UUID id) {
         for (Item item : mItems) {
-            if (item.getSerial().equals(id)) {
+            if (item.getId().equals(id)) {
                 return item;
             }
         }

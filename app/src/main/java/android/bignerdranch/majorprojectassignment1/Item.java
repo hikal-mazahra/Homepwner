@@ -2,9 +2,12 @@ package android.bignerdranch.majorprojectassignment1;
 
 import java.util.Date;
 import java.util.Random;
+import java.util.UUID;
 
 public class Item
 {
+    private UUID mId;
+
     private String name;
     private String Serial;
     private double Value;
@@ -12,6 +15,8 @@ public class Item
 
     public Item()
     {
+        mId = UUID.randomUUID();
+
         mDate = new Date();
     }
 
@@ -19,7 +24,9 @@ public class Item
     public double getValue() {
         return Value;
     }
-
+    public UUID getId() {
+        return mId;
+    }
     public void setValue(double value) {
         Value = value;
     }
@@ -35,7 +42,9 @@ public class Item
     public String getSerial() {
         return Serial;
     }
-
+    public void setSerial(String serial) {
+        this.Serial = serial;
+    }
     public String generateSerial() {
         final String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random random = new Random();
