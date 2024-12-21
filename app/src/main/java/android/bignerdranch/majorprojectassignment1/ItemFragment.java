@@ -1,6 +1,7 @@
 package android.bignerdranch.majorprojectassignment1;
 
-import android.app.Fragment;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -8,25 +9,36 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 
 public class ItemFragment extends androidx.fragment.app.Fragment
 {
     private static final String ARG_ITEM_ID = "item_id";
+    private static final String DIALOG_DATE = "DialogDate";
+    private static final int REQUEST_DATE = 0;
+
+
     private Item mItem;
     private EditText mNameField;
     private EditText mSerialField;
     private EditText mValueField;
     private TextView mDateTextView;
     private DecimalFormat decimalFormat;
+    private Button mDateButton;
+
 
     public static ItemFragment newInstance(UUID itemID) {
         Bundle args = new Bundle();
@@ -45,10 +57,24 @@ public class ItemFragment extends androidx.fragment.app.Fragment
         mItem = ItemLab.get(getActivity()).getItem(itemId);
     }
     @Override
+    public void onPause(){
+        super.onPause();
+        ItemLab.get(getActivity())
+                .updateItem(mItem);
+    }
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_item, container, false);
-
+        Toolbar toolbar = v.findViewById(R.id.toolbar);
+        toolbar.setTitle(mItem.getName());
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null) {
+            activity.setSupportActionBar(toolbar);
+            if (activity.getSupportActionBar() != null) {
+                activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+        }
 
         mNameField = (EditText)v.findViewById(R.id.item_name);
         mSerialField = v.findViewById(R.id.item_serial);
@@ -56,6 +82,10 @@ public class ItemFragment extends androidx.fragment.app.Fragment
         mDateTextView = v.findViewById(R.id.item_date);
         decimalFormat = new DecimalFormat("0.00");
         //here i am populating the fields with the current item information
+
+
+
+
 
         mNameField.setText(mItem.getName());
         mSerialField.setText(String.valueOf(mItem.getSerial()));
@@ -135,14 +165,38 @@ public class ItemFragment extends androidx.fragment.app.Fragment
             public void afterTextChanged(Editable s) {
             }
         });
+        mDateButton = (Button) v.findViewById(R.id.item_date);
         updateDate();
+        mDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getParentFragmentManager();
+                DatePickerFragment dialog = DatePickerFragment
+                        .newInstance(mItem.getmDate());
+                dialog.setTargetFragment(ItemFragment.this, REQUEST_DATE);
 
+                dialog.show(manager, DIALOG_DATE);
+            }
+        });
         return v;
     }
-//getting the date with the correct format
-    private void updateDate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
-        String formattedDate = dateFormat.format(mItem.getmDate());
-        mDateTextView.setText(formattedDate);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if (requestCode == REQUEST_DATE) {
+            Date date = (Date) data
+                    .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            mItem.setmDate(date);
+            updateDate();
+        }
     }
+
+    private void updateDate() {
+        mDateButton.setText(mItem.getmDate().toString());
+    }
+
+    //getting the date with the correct format
+
 }

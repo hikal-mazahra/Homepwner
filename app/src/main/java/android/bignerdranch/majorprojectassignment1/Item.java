@@ -12,11 +12,16 @@ public class Item
     private String Serial;
     private double Value;
     private Date mDate;
+    private String mOwner;
 
     public Item()
     {
-        mId = UUID.randomUUID();
+        this(UUID.randomUUID());
 
+    }
+    public Item(UUID id){
+        this.Serial = generateSerial();
+        mId = id;
         mDate = new Date();
     }
 
@@ -26,6 +31,12 @@ public class Item
     }
     public UUID getId() {
         return mId;
+    }
+    public String getOwner(){
+        return mOwner;
+    }
+    public void setOwner(String owner){
+        mOwner = owner;
     }
     public void setValue(double value) {
         Value = value;
@@ -61,4 +72,6 @@ public class Item
     public void setName(String name) {
         this.name = name;
     }
+
+
 }

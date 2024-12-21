@@ -20,7 +20,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ItemPagerActivity"
-            android:exported="true">
+            android:parentActivityName=".ItemListActivity"
+
+        android:exported="true">
 
         </activity>
     </application>
